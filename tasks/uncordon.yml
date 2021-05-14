@@ -4,6 +4,8 @@
     {{ bin_dir }}/kubectl uncordon
     {{ kube_override_hostname|default(inventory_hostname) }}
   delegate_to: "{{ groups['kube-master'][0] }}"
+  delay: 20
+  retries: 10
 
 - name: Wait for node to uncordon
   command: >-
