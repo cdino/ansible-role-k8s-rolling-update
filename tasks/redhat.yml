@@ -1,0 +1,21 @@
+---
+- name: Upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: check if reboot is required
+  command: needs-restarting -r
+  failed_when: false
+  register: reboot_required
+  changed_when: false
+
+- name: Reboot the serverneeds-restarting -r
+  reboot:
+    post_reboot_delay: 30
+  when: reboot_required.stat.exists
